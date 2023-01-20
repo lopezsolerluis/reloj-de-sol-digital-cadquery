@@ -140,10 +140,20 @@ def hora_solar(horas, minutos):
   # separador
   result.add(separador(alpha,alpha))
   return result
-                      
-cuerpo = cq.Workplane("YZ" ).cylinder(height=largo_reloj,
-                                      radius=radio_semicilindro,
-                                      angle=180)
 
-reloj = cuerpo.cut(hora_solar(12,0))
+def cuerpo():
+    return cq.Workplane("YZ" ).cylinder(height=largo_reloj,
+                                        radius=radio_semicilindro,
+                                        angle=180)
+      
+def reloj_de_sol_discreto(vector_horas):
+    horas = cq.Workplane()         
+    for hora_minutos in vector_horas:
+      hora=hora_minutos[0];
+      minutos=hora_minutos[1];
+      horas.add(hora_solar(hora,minutos))
+    return cuerpo().cut(horas)
+    
+r = reloj_de_sol_discreto([(12,0),(15,23),(8,10)])
+#reloj = cuerpo.cut(hora_solar(12,0))
 
