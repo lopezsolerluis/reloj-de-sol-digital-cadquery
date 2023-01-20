@@ -75,6 +75,9 @@ digitos = [
  [0, 0, 0, 1],
  [0, 1, 1, 0]]]
  
+def n_a_digito(n,p):
+  return trunc(n/10**p)%10
+
 def alfa_sur(hora):
     return 270-15*hora
 
@@ -96,22 +99,51 @@ def haz_de_sol(alfa1,alfa2):
               (D2-alto_pixel/2,H,0),
               (D1+alto_pixel/2,H,0),
               (alto_pixel/2,0,0)]
-  return cq.Workplane("XZ").polyline(vertices).close().extrude(ancho_pixel/2,both=True)
+  return cq.Workplane("YZ").polyline(vertices).close().extrude(ancho_pixel/2,both=True)
     
-cuerpo = cq.Workplane("XZ" ).cylinder(height=largo_reloj,
-                                      radius=radio_semicilindro,
-                                      angle=180)
-
 def digito(numero,alfa1,alfa2):
-    d = cq.Workplane()
+    result = cq.Workplane()
     for i in range(6):
       for j in range(4):
         digito = digitos[numero]
         if (digito[i][j]==1):
-            x = (i-2.5)*(alto_pixel+delta_alto)
-            y = (j-1.5)*(ancho_pixel+delta_ancho)
-      #translate([x,y,-0.01])
-            d.add(haz_de_sol(alfa1,alfa2).translate((x,y,0)))
-    return d
+            x = -(j-1.5)*(ancho_pixel+delta_ancho)
+            y =  (i-2.5)*(alto_pixel+delta_alto)            
+            result.add(haz_de_sol(alfa1,alfa2).translate((x,y,0)))
+    return result
   
-reloj = cuerpo.cut(digito(9,45,60))
+def separador(alfa1,alfa2):
+  result = cq.Workplane()  
+  for i in [-1,1]:
+      result.add(haz_de_sol(alfa1,alfa2).translate([0,i*0.5*(alto_pixel+delta_alto), 0]))
+  return result
+
+def hora_solar(horas, minutos):
+  hora = horas+minutos/60;
+  #assert(hora>6 && hora<18,"La hora debe encontrarse entre las 6:00 y las 18:00.");
+  alpha = alfa(hora)
+  hora_decenas = n_a_digito(horas,1)
+  hora_unidades = n_a_digito(horas,0)
+  minuto_decenas = n_a_digito(minutos,1)
+  minuto_unidades = n_a_digito(minutos,0)
+                    
+  delta_y = ancho_pixel+delta_ancho
+  
+  result = cq.Workplane()
+  # horas    
+  if (hora_decenas != 0):    
+      result.add(digito(hora_decenas,alpha,alpha).translate([8.5*delta_y,0,0]))
+  result.add(digito(hora_unidades,alpha,alpha).translate([3.5*delta_y,0,0]))
+  # minutos
+  result.add(digito(minuto_decenas,alpha,alpha).translate([-3.5*delta_y,0,0]))
+  result.add(digito(minuto_unidades,alpha,alpha).translate([-8.5*delta_y,0,0]))
+  # separador
+  result.add(separador(alpha,alpha))
+  return result
+                      
+cuerpo = cq.Workplane("YZ" ).cylinder(height=largo_reloj,
+                                      radius=radio_semicilindro,
+                                      angle=180)
+
+reloj = cuerpo.cut(hora_solar(12,0))
+
