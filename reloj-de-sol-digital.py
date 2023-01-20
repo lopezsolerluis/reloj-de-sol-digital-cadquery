@@ -127,16 +127,16 @@ def hora_solar(horas, minutos):
   minuto_decenas = n_a_digito(minutos,1)
   minuto_unidades = n_a_digito(minutos,0)
                     
-  delta_y = ancho_pixel+delta_ancho
+  delta_x = ancho_pixel+delta_ancho
   
   result = cq.Workplane()
   # horas    
   if (hora_decenas != 0):    
-      result.add(digito(hora_decenas,alpha,alpha).translate([8.5*delta_y,0,0]))
-  result.add(digito(hora_unidades,alpha,alpha).translate([3.5*delta_y,0,0]))
+      result.add(digito(hora_decenas,alpha,alpha).translate([8.5*delta_x,0,0]))
+  result.add(digito(hora_unidades,alpha,alpha).translate([3.5*delta_x,0,0]))
   # minutos
-  result.add(digito(minuto_decenas,alpha,alpha).translate([-3.5*delta_y,0,0]))
-  result.add(digito(minuto_unidades,alpha,alpha).translate([-8.5*delta_y,0,0]))
+  result.add(digito(minuto_decenas,alpha,alpha).translate([-3.5*delta_x,0,0]))
+  result.add(digito(minuto_unidades,alpha,alpha).translate([-8.5*delta_x,0,0]))
   # separador
   result.add(separador(alpha,alpha))
   return result
@@ -152,8 +152,34 @@ def reloj_de_sol_discreto(vector_horas):
       hora=hora_minutos[0];
       minutos=hora_minutos[1];
       horas.add(hora_solar(hora,minutos))
-    return cuerpo().cut(horas)
-    
-r = reloj_de_sol_discreto([(12,0),(15,23),(8,10)])
-#reloj = cuerpo.cut(hora_solar(12,0))
+    return cuerpo().cut(horas)    
+
+def reloj_de_sol_continuo():
+  delta_x = ancho_pixel+delta_ancho
+  orificios = cq.Workplane()
+  # unidades de minuto
+  orificios.add(digito(0,alfa(9),alfa(15+10/60)).translate([-8.5*delta_x,0,0]))
+  # decenas de minuto
+  for hora in range(9,15):
+      for minutos in (0,20,40):
+          minuto_decenas = n_a_digito(minutos,1)
+          orificios.add(digito(minuto_decenas,
+                               alfa(hora+minutos/60),
+                               alfa(hora+(minutos+10)/60)).translate([-3.5*delta_x,0,0]))
+  orificios.add(digito(0,alfa(15),alfa(15+10/60)).translate([-3.5*delta_x,0,0]))
+ # separador
+  orificios.add(separador(alfa(9),alfa(15+10/60)))
+  # unidades de hora       
+  for hora in range(9,15):
+      hora_unidades = n_a_digito(hora,0)
+      orificios.add(digito(hora_unidades,
+                           alfa(hora),
+                           alfa(hora+50/60 if hora<15 else hora+10/60)).translate([3.5*delta_x,0,0]))
+  # decenas de hora
+  orificios.add(digito(1,alfa(10),alfa(15+10/60)).translate([8.5*delta_x,0,0]))
+  return cuerpo().cut(orificios)
+
+r = reloj_de_sol_continuo()
+# r = reloj_de_sol_discreto([(12,0),(15,23),(8,10)])
+
 
