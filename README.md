@@ -1,4 +1,4 @@
-# Un reloj de sol digital escrito en cadquery
+# Un reloj de sol digital escrito en CadQuery
 
 ## Aún *otro* reloj de sol digital...
 
