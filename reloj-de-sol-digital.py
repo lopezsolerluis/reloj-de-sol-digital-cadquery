@@ -167,16 +167,16 @@ def reloj_de_sol_continuo():
                                alfa(hora+minutos/60),
                                alfa(hora+(minutos+10)/60)).translate([-3.5*delta_x,0,0]))
   orificios.add(digito(0,alfa(15),alfa(15+10/60)).translate([-3.5*delta_x,0,0]))
- # separador
+  # separador
   orificios.add(separador(alfa(9),alfa(15+10/60)))
-  # unidades de hora       
-  for hora in range(9,15):
-      hora_unidades = n_a_digito(hora,0)
-      orificios.add(digito(hora_unidades,
-                           alfa(hora),
-                           alfa(hora+50/60 if hora<15 else hora+10/60)).translate([3.5*delta_x,0,0]))
-  # decenas de hora
-  orificios.add(digito(1,alfa(10),alfa(15+10/60)).translate([8.5*delta_x,0,0]))
+ #  # unidades de hora       
+  # for hora in range(9,15):
+  #     hora_unidades = n_a_digito(hora,0)
+  #     orificios.add(digito(hora_unidades,
+  #                          alfa(hora),
+  #                          alfa(hora+50/60 if hora<15 else hora+10/60)).translate([3.5*delta_x,0,0]))
+ #  # decenas de hora
+  #orificios.add(digito(1,alfa(10),alfa(15+10/60)).translate([8.5*delta_x,0,0]))
   return cuerpo().cut(orificios)
 
 r = reloj_de_sol_continuo()

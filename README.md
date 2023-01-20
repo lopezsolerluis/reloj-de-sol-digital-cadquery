@@ -1,7 +1,7 @@
-# reloj-de-sol-digital-cadquery
+# Un reloj de sol digital escrito en cadquery
 
 ## Aún *otro* reloj de sol digital...
 
-Gracias a **Leandro Batlle** me enteré de este nuevo lenguaje para (des)escribir objetos tridimensionales: <https://github.com/CadQuery/cadquery>. Y se me ocurrió que la peor manera de aprenderlo no podía ser intentar reescribir la versión del reloj de Sol digital que hiciera, hace un tiempo, con [OpenSCAD](https://openscad.org/): [Un reloj de Sol digital](https://github.com/lopezsolerluis/reloj-de-sol-digital).
+Gracias a **Leandro Batlle** me enteré de la existencia de [un nuevo lenguaje](https://github.com/CadQuery/cadquery) para (des)escribir objetos tridimensionales. Y se me ocurrió que no podía ser la peor manera de aprenderlo intentar reescribir la versión del [reloj de Sol digital](https://github.com/lopezsolerluis/reloj-de-sol-digital) que hiciera, hace un tiempo, con [OpenSCAD](https://openscad.org/). 
 
 Así que aquí estamos... 😊
