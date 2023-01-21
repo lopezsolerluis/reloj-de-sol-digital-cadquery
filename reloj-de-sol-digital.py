@@ -147,14 +147,16 @@ def cuerpo():
                                         angle=180)
       
 def reloj_de_sol_discreto(vector_horas):
-    horas = cq.Workplane()         
+    '''Reloj de Sol de algunas horas puntuales. 'vector_horas' es un vector con las horas y minutos que el usuario desea mostrar; por ej.: [(12,00), (7,13), (16,23)] representa las 12:00, 7:13 y 16:23.'''   
+    orificios = cq.Workplane()         
     for hora_minutos in vector_horas:
       hora=hora_minutos[0];
       minutos=hora_minutos[1];
-      horas.add(hora_solar(hora,minutos))
-    return cuerpo().cut(horas)    
+      orificios.add(hora_solar(hora,minutos))
+    return cuerpo().cut(orificios)    
 
 def reloj_de_sol_continuo():
+  '''Reloj de Sol con las horas desde las 9:00 a las 15:10, en intervalos de 20 minutos.'''
   delta_x = ancho_pixel+delta_ancho
   orificios = cq.Workplane()
   # unidades de minuto
@@ -179,7 +181,7 @@ def reloj_de_sol_continuo():
   orificios.add(digito(1,alfa(10),alfa(15+10/60)).translate([8.5*delta_x,0,0]))
   return cuerpo().cut(orificios)
 
-r = reloj_de_sol_continuo()
-# r = reloj_de_sol_discreto([(12,0),(15,23),(8,10)])
+# reloj = reloj_de_sol_continuo()
+# reloj = reloj_de_sol_discreto([(12,0),(15,23),(8,10)])
 
 
