@@ -155,8 +155,15 @@ def sundial_body():
     body = cq.Workplane("YZ").cylinder(height=sundial_length,
                                        radius=semicylinder_radius,
                                        angle=180)
-    # body = (body.cut(text_to_cut(text_1,-sundial_length/2+5))
-    #             .cut(text_to_cut(text_2,sundial_length/2-5)))    
+    body = (body.cut(text_to_cut(text_1,-sundial_length/2+5))
+                .cut(text_to_cut(text_2,sundial_length/2-5)))   
+    body = (body.faces("<X").workplane()     
+                .center(-15,0)
+                .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()
+                .cutBlind(-7)
+                .center(+30,0)
+                .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()                
+                .cutBlind(-7))
     return body
 
 def discrete_sundial(vector_hours):
@@ -196,28 +203,50 @@ def base():
     base = (cq.Workplane("XY")
               .cylinder(height=2,radius=r)
               .faces(">Z").workplane().tag("top-face")
-              .center(-r+10,0)
+              .center(-r+10,-5)
               .cylinder(5,5,centered=False)
               .faces(">Z")
               .cskHole(4, 8, 82, depth=None)
               .workplaneFromTagged("top-face")
-              .center(0,r-10)
+              .center(0,r-12)
               .rect(25,5).extrude(semicylinder_radius-4)
               .faces(">Z").edges("|Y").fillet(8)
               .workplaneFromTagged("top-face")
-              .center(0,-r+10)
+              .center(0,-r+12)
               .rect(25,5).extrude(semicylinder_radius-4)
               .faces(">Z").edges("|Y").fillet(8)
               .workplaneFromTagged("top-face")
-              .transformed(offset=cq.Vector(0, 0, semicylinder_radius/2+2),
+              .transformed(offset=cq.Vector(0, 0, semicylinder_radius/2+1),
                            rotate=cq.Vector(90, 0, 0))
-              .circle(5).cutThruAll()
+              .circle(3).cutThruAll()
               )
     return base
             
+def coupling():
+    body = (cq.Workplane("XZ")
+              .cylinder(height=2*semicylinder_radius, 
+                        radius=semicylinder_radius/2)              
+              .faces(">Z").tag("side-face")
+              .transformed(offset=cq.Vector(semicylinder_radius/2-5.1,-semicylinder_radius/2,0),
+                           rotate=cq.Vector(0, 90, 0))
+              .cylinder(height=20, radius=semicylinder_radius, angle=180)              
+              .workplaneFromTagged("side-face")
+              .circle(3).cutThruAll()
+              .transformed(offset=cq.Vector(0,-semicylinder_radius/2,0),
+                           rotate=cq.Vector(0, 90, 0))    
+              .center(-15,0)
+              .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()
+              .extrude(20+6)
+              .center(+30,0)
+              .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()
+              .extrude(20+6)
+              )
+    return body
+    
 b = base()
-c = sundial_body().translate((sundial_length/2+15,0,2))
-#reloj = continuous_sundial()
-#reloj = discrete_sundial([(12,0),(15,23),(8,10)])
+c = coupling().rotate((0,0,0),(0,1,0),-30).translate((0,0,semicylinder_radius/2+2))
+sundial_rotated = continuous_sundial().rotate((0,0,0),(0,1,0),-30).translate((sundial_length/2+30,0,67))
+#sundial_1 = continuous_sundial()
+#sundial_2 = discrete_sundial([(12,0),(15,23),(8,10)])
 
 
