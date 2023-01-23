@@ -8,6 +8,8 @@ Now, thanks to **Leandro Batlle**, I came across [a new language](https://github
 
 So here I am... 😊
 
+If you want to read a (too long) explanation of how I did my own version in OpenSCAD, you can find a *very* verbose way [here](https://github.com/lopezsolerluis/reloj-de-sol-libro) (in spanish only).
+
 # Un reloj de sol digital escrito en CadQuery
 
 ## Aún *otro* reloj de sol digital...
@@ -15,3 +17,5 @@ So here I am... 😊
 Gracias a **Leandro Batlle** me enteré de la existencia de [un nuevo lenguaje](https://github.com/CadQuery/cadquery) para (des)escribir objetos tridimensionales. Y se me ocurrió que no podía ser la peor manera de aprenderlo intentar reescribir la versión del [reloj de Sol digital](https://github.com/lopezsolerluis/reloj-de-sol-digital) que hiciera, hace un tiempo, con [OpenSCAD](https://openscad.org/). 
 
 Así que aquí estamos... 😊
+
+Si quieren leer una explicación *muy extensa* de cómo logré mi propia versión en OpenSCAD, pueden encontrarla [aquí](https://github.com/lopezsolerluis/reloj-de-sol-libro).
