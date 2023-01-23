@@ -170,7 +170,7 @@ def continuous_sundial():
   # delimiter
   c = c.cut(delimiter(hour_to_alpha(9),hour_to_alpha(15+10/60)))
   # units of hours
-  for hour in range(9,15):
+  for hour in range(9,16):
       units_of_hour = digit_of_number(hour,0)
       c = c.cut(digit(units_of_hour,
                       hour_to_alpha(hour),
