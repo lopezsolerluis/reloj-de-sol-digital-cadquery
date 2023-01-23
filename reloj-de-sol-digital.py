@@ -155,8 +155,8 @@ def sundial_body():
     body = cq.Workplane("YZ").cylinder(height=sundial_length,
                                        radius=semicylinder_radius,
                                        angle=180)
-    body = (body.cut(text_to_cut(text_1,-sundial_length/2+5))
-                .cut(text_to_cut(text_2,sundial_length/2-5)))    
+    # body = (body.cut(text_to_cut(text_1,-sundial_length/2+5))
+    #             .cut(text_to_cut(text_2,sundial_length/2-5)))    
     return body
 
 def discrete_sundial(vector_hours):
@@ -191,7 +191,33 @@ def continuous_sundial():
   c = c.cut(digit(1,hour_to_alpha(10),hour_to_alpha(15+10/60)).translate([8.5*delta_x,0,0]))
   return c
 
+def base():    
+    r = semicylinder_radius+15
+    base = (cq.Workplane("XY")
+              .cylinder(height=2,radius=r)
+              .faces(">Z").workplane().tag("top-face")
+              .center(-r+10,0)
+              .cylinder(5,5,centered=False)
+              .faces(">Z")
+              .cskHole(4, 8, 82, depth=None)
+              .workplaneFromTagged("top-face")
+              .center(0,r-10)
+              .rect(25,5).extrude(semicylinder_radius-4)
+              .faces(">Z").edges("|Y").fillet(8)
+              .workplaneFromTagged("top-face")
+              .center(0,-r+10)
+              .rect(25,5).extrude(semicylinder_radius-4)
+              .faces(">Z").edges("|Y").fillet(8)
+              .workplaneFromTagged("top-face")
+              .transformed(offset=cq.Vector(0, 0, semicylinder_radius/2+2),
+                           rotate=cq.Vector(90, 0, 0))
+              .circle(5).cutThruAll()
+              )
+    return base
+            
+b = base()
+c = sundial_body().translate((sundial_length/2+15,0,2))
 #reloj = continuous_sundial()
-reloj = discrete_sundial([(12,0),(15,23),(8,10)])
+#reloj = discrete_sundial([(12,0),(15,23),(8,10)])
 
 
