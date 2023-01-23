@@ -2,7 +2,7 @@
 
 ## Yet another digital sundial...
 
-Some time ago, I wanted to lean some [OpenSCAD](https://openscad.org/), and decided to replicate the wonderlful [digital sundial](https://www.thingiverse.com/thing:1068443) created by Mojopix.
+Some time ago, I wanted to lean some [OpenSCAD](https://openscad.org/), and decided to replicate the wonderlful [digital sundial](https://www.thingiverse.com/thing:1068443) created by **Mojoptix**.
 
 Now, thanks to **Leandro Batlle**, I came across [a new language](https://github.com/CadQuery/cadquery) to describe 3D objects. And I thought there could be worse ways of learning it than trying to rewrite [that version of mine of the digital sundial](https://github.com/lopezsolerluis/reloj-de-sol-digital).
 
