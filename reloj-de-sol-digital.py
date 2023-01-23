@@ -2,8 +2,8 @@ import cadquery as cq
 from math import trunc, radians, tan
 
 hemisphere = "sur"
-text_1 = "Ab Revolutionibus Astri..."
-text_2 = "...Girum Orbis Noscimus"
+text_1 = "NON EST AD ASTRA..."
+text_2 = "...MOLLIS E TERRIS VIA"
 pixel_height = .75
 pixel_width = 6
 delta_height  = 6.5
@@ -11,7 +11,7 @@ delta_width = 1.5
 border = 10
 semicylinder_radius = 30
 H = semicylinder_radius+10
-sundial_lenght = 21*pixel_width + 20*delta_width + 2*border
+sundial_length = 21*pixel_width + 20*delta_width + 2*border
 delta_x = pixel_width+delta_width
 
 digits = [[[0, 1 ,1, 0], # zero
@@ -139,10 +139,25 @@ def sun_hour(hours, minutes):
   result.add(delimiter(alpha,alpha))
   return result
 
+def text_to_cut(text,x):
+    delta_a = 160/(len(text)-1)
+    result = cq.Workplane("XY")
+    for i in range(len(text)):
+        c = text[i]  
+        if c != " ":
+            result.add(cq.Workplane().text(c,5,2).
+                       rotate((0,0,0),(0,0,1),90).
+                       translate((x,0,semicylinder_radius-2)).
+                       rotate((0,0,0),(1,0,0),-i*delta_a+90-10))
+    return result
+    
 def sundial_body():
-    return cq.Workplane("YZ").cylinder(height=sundial_lenght,
+    body = cq.Workplane("YZ").cylinder(height=sundial_length,
                                        radius=semicylinder_radius,
                                        angle=180)
+    body = (body.cut(text_to_cut(text_1,-sundial_length/2+5))
+                .cut(text_to_cut(text_2,sundial_length/2-5)))    
+    return body
 
 def discrete_sundial(vector_hours):
     '''Digital sundial for some selected hours. 'vector_hours' is a vector with the hours and minutes the user wishes to show; p ej.: [(12,00), (7,13), (16,23)] represents 12:00, 7:13 y 16:23.'''
@@ -176,7 +191,7 @@ def continuous_sundial():
   c = c.cut(digit(1,hour_to_alpha(10),hour_to_alpha(15+10/60)).translate([8.5*delta_x,0,0]))
   return c
 
-reloj = continuous_sundial()
-#reloj = discrete_sundial([(12,0),(15,23),(8,10)])
+#reloj = continuous_sundial()
+reloj = discrete_sundial([(12,0),(15,23),(8,10)])
 
 
