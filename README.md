@@ -1,5 +1,7 @@
 # A digital sundial in CadQuery
 
+![digital-sundial](https://github.com/lopezsolerluis/reloj-de-sol-digital-cadquery/blob/main/sundial-cadquery.png)
+
 ## Yet another digital sundial...
 
 Some time ago, I wanted to lean some [OpenSCAD](https://openscad.org/), and decided to replicate the wonderlful [digital sundial](https://www.thingiverse.com/thing:1068443) created by **Mojoptix**.
