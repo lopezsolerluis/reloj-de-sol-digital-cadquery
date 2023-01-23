@@ -169,7 +169,7 @@ def sundial_body():
 def discrete_sundial(vector_hours):
     '''Digital sundial for some selected hours. 'vector_hours' is a vector with the hours and minutes the user wishes to show; p ej.: [(12,00), (7,13), (16,23)] represents 12:00, 7:13 y 16:23.'''
     c = sundial_body()
-    for (hour, minutes) in vector_hours:      
+    for hour, minutes in vector_hours:      
       c = c.cut(sun_hour(hour,minutes))
     return c
 
