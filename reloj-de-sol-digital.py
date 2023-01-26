@@ -231,7 +231,7 @@ def base():
               .circle(3).cutThruAll()
               )
     return base
-            
+
 def coupling():
     body = (cq.Workplane("YZ")
               .cylinder(height=length_coupling,
@@ -256,8 +256,8 @@ def coupling():
     return body
     
 # b = base()
-c = coupling()#.rotate((0,0,0),(0,1,0),30).translate((0,0,semicylinder_radius/2+2))
-sundial_rotated = discrete_sundial([(12,0)]).rotate((0,0,0),(0,1,0),30).translate((-sundial_length/2-30,0,67))
+c = coupling().rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30).translate((0,0,semicylinder_radius/2+2))
+sundial_rotated = continuous_sundial().translate((-sundial_length/2-40,0,semicylinder_radius/2)).rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30)
 #sundial_1 = continuous_sundial()
 #sundial_2 = discrete_sundial([(12,0),(15,23),(8,10)])
 
