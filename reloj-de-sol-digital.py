@@ -17,6 +17,10 @@ pins_angle = 60
 pins_length = 8
 pin_distance = semicylinder_radius*.6
 axis_radius = 2.5
+base_radius = semicylinder_radius+15
+base_height = 2
+pillar_width = 5
+pillar_separation = .2
 
 H = semicylinder_radius+10
 sundial_length = 21*pixel_width + 20*delta_width + 2*border
@@ -209,26 +213,21 @@ def continuous_sundial():
   return c
 
 def base():    
-    r = semicylinder_radius+15
     base = (cq.Workplane("XY")
-              .cylinder(height=2,radius=r)
+              .cylinder(height=base_height,radius=base_radius)
               .faces(">Z").workplane().tag("top-face")
-              .center(r-18,-5)
+              .center(base_radius-18,-5)
               .cylinder(5,5,centered=False)
               .faces(">Z")
               .cskHole(4, 8, 82, depth=None)
               .workplaneFromTagged("top-face")
-              .center(0,r-12)
-              .rect(25,5).extrude(semicylinder_radius-4)
-              .faces(">Z").edges("|Y").fillet(8)
-              .workplaneFromTagged("top-face")
-              .center(0,-r+12)
-              .rect(25,5).extrude(semicylinder_radius-4)
-              .faces(">Z").edges("|Y").fillet(8)
-              .workplaneFromTagged("top-face")
-              .transformed(offset=cq.Vector(0, 0, semicylinder_radius/2+1),
-                           rotate=cq.Vector(90, 0, 0))
-              .circle(3).cutThruAll()
+              .pushPoints([(0,base_radius-semicylinder_radius/2+pillar_width/2+pillar_separation),
+                           (0,-(base_radius-semicylinder_radius/2+pillar_width/2+pillar_separation))])
+              .rect(semicylinder_radius,pillar_width).extrude(semicylinder_radius+base_height/2)
+              .faces(">Z").edges("|Y").fillet(semicylinder_radius/2.01)
+              .faces(">Y").workplane()
+              .center(0,semicylinder_radius/2+base_height/2)
+              .circle(2*axis_radius).cutThruAll()
               )
     return base
 
@@ -257,7 +256,8 @@ def coupling():
     
 b = base()
 c = coupling().rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30).translate((0,0,2))
-sundial_rotated = continuous_sundial().translate((-sundial_length/2-40,0,2)).rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30)
+sundial_discrete_rotated = discrete_sundial([(12,0)]).translate((-sundial_length/2-40,0,2)).rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30)
+# sundial_rotated = continuous_sundial().translate((-sundial_length/2-40,0,2)).rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30)
 #sundial_1 = continuous_sundial()
 #sundial_2 = discrete_sundial([(12,0),(15,23),(8,10)])
 
