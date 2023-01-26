@@ -14,7 +14,7 @@ length_coupling = 20
 pins_height = 7
 pins_width = 5
 pins_angle = 60
-pins_length = 7
+pins_length = 8
 pin_distance = semicylinder_radius*.6
 axis_radius = 2.5
 
@@ -160,18 +160,20 @@ def text_to_cut(text,x):
     return result
     
 def sundial_body():
-    body = cq.Workplane("YZ").cylinder(height=sundial_length,
+    body = (cq.Workplane("YZ").cylinder(height=sundial_length,
                                        radius=semicylinder_radius,
-                                       angle=180)    
+                                       angle=180)
+            .faces(">X").edges("<Z")
+            .workplane(centerOption="CenterOfMass")
+            .center(0,pins_height/2)
+            .pushPoints([(-pin_distance,0),(pin_distance,0)])
+            .sketch()
+            .trapezoid(pins_width,pins_height,-pins_angle)
+            .finalize()
+            .cutBlind(-pins_length)
+            )
     body = (body.cut(text_to_cut(text_1,-sundial_length/2+5))
-                .cut(text_to_cut(text_2,sundial_length/2-5)))   
-    body = (body.faces(">X").workplane()     
-                .center(-15,0)
-                .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()
-                .cutBlind(-7)
-                .center(+30,0)
-                .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()                
-                .cutBlind(-7))
+                .cut(text_to_cut(text_2,sundial_length/2-5)))
     return body
 
 def discrete_sundial(vector_hours):
@@ -230,8 +232,8 @@ def base():
               )
     return base
             
-def coupling():    
-    body = (cq.Workplane("YZ")            
+def coupling():
+    body = (cq.Workplane("YZ")
               .cylinder(height=length_coupling,
                         radius=semicylinder_radius, angle=180)
               .translate((-length_coupling/2-1,0,0)) # Why can't I put this _on_ YZ' plane?
@@ -255,7 +257,7 @@ def coupling():
     
 # b = base()
 c = coupling()#.rotate((0,0,0),(0,1,0),30).translate((0,0,semicylinder_radius/2+2))
-# sundial_rotated = continuous_sundial().rotate((0,0,0),(0,1,0),30).translate((-sundial_length/2-30,0,67))
+sundial_rotated = discrete_sundial([(12,0)]).rotate((0,0,0),(0,1,0),30).translate((-sundial_length/2-30,0,67))
 #sundial_1 = continuous_sundial()
 #sundial_2 = discrete_sundial([(12,0),(15,23),(8,10)])
 
