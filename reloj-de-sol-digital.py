@@ -10,6 +10,14 @@ delta_height  = 6.5
 delta_width = 1.5
 border = 10
 semicylinder_radius = 30
+length_coupling = 20
+pins_height = 7
+pins_width = 5
+pins_angle = 60
+pins_length = 7
+pin_distance = semicylinder_radius*.6
+axis_radius = 2.5
+
 H = semicylinder_radius+10
 sundial_length = 21*pixel_width + 20*delta_width + 2*border
 delta_x = pixel_width+delta_width
@@ -222,31 +230,32 @@ def base():
               )
     return base
             
-def coupling():
-    body = (cq.Workplane("XZ")
-              .cylinder(height=2*semicylinder_radius, 
-                        radius=semicylinder_radius/2)              
-              .faces(">Z").tag("side-face")
-              .transformed(offset=cq.Vector(-semicylinder_radius/2+4.99, # Why not '5'?
-                                            -semicylinder_radius/2,0),
-                           rotate=cq.Vector(0, -90, 0))
-              .cylinder(height=20, radius=semicylinder_radius, angle=180)              
-              .workplaneFromTagged("side-face")
-              .circle(3).cutThruAll()
-              .transformed(offset=cq.Vector(0,-semicylinder_radius/2,0),
-                           rotate=cq.Vector(0, -90, 0))    
-              .center(-15,0)
-              .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()
-              .extrude(20+6)
-              .center(+30,0)
-              .polyline(((-5,0),(-10,10),(10,10),(5,0))).close()
-              .extrude(20+6)
+def coupling():    
+    body = (cq.Workplane("YZ")            
+              .cylinder(height=length_coupling,
+                        radius=semicylinder_radius, angle=180)
+              .translate((-length_coupling/2-1,0,0)) # Why can't I put this _on_ YZ' plane?
+              .faces("<X").edges("<Z")
+              .workplane(centerOption="CenterOfMass")
+              .center(0,pins_height/2)
+              .pushPoints([(-pin_distance,0),(pin_distance,0)])
+              .sketch()
+              .trapezoid(pins_width,pins_height,-pins_angle)
+              .finalize()
+              .extrude(pins_length)
+              .copyWorkplane(cq.Workplane("XZ"))
+              .center(0,semicylinder_radius/2)
+              .cylinder(height=2*semicylinder_radius,
+                         radius=semicylinder_radius/2)
+              .faces("XZ")
+              .workplane()
+              .circle(2*axis_radius).cutThruAll()
               )
     return body
     
-b = base()
-c = coupling().rotate((0,0,0),(0,1,0),30).translate((0,0,semicylinder_radius/2+2))
-sundial_rotated = continuous_sundial().rotate((0,0,0),(0,1,0),30).translate((-sundial_length/2-30,0,67))
+# b = base()
+c = coupling()#.rotate((0,0,0),(0,1,0),30).translate((0,0,semicylinder_radius/2+2))
+# sundial_rotated = continuous_sundial().rotate((0,0,0),(0,1,0),30).translate((-sundial_length/2-30,0,67))
 #sundial_1 = continuous_sundial()
 #sundial_2 = discrete_sundial([(12,0),(15,23),(8,10)])
 
