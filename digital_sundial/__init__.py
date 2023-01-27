@@ -36,12 +36,13 @@ base_height = 2
 pillar_width = 5
 pillar_separation = .2
 
-H = semicylinder_radius + 10
-sundial_length = 21 * pixel_width + 20 * delta_width + 2 * border
-delta_x = pixel_width + delta_width
 #
 # end of config
 #
+
+H = semicylinder_radius + 10
+sundial_length = 21 * pixel_width + 20 * delta_width + 2 * border
+delta_x = pixel_width + delta_width
 
 
 digits = [[[0, 1, 1, 0],  # zero
@@ -180,7 +181,7 @@ def sun_hour(hours, minutes):
     return result
 
 
-def text_to_cut(text, x):
+def text_to_cut(text, x):    
     delta_a = 160 / (len(text) - 1)
     result = cq.Workplane("XY")
     for i in range(len(text)):
