@@ -140,10 +140,10 @@ def sun_beam(alpha1, alpha2):
 
 
 def digit(number, alpha1, alpha2):
+    digit = digits[number]
     result = cq.Workplane()
     for i in range(6):
         for j in range(4):
-            digit = digits[number]
             if (digit[i][j] == 1):
                 x = -(j - 1.5) * (pixel_width + delta_width)
                 y = (i - 2.5) * (pixel_height + delta_height)
@@ -283,8 +283,7 @@ def coupling():
             .center(0, semicylinder_radius / 2)
             .cylinder(height=2 * semicylinder_radius,
                       radius=semicylinder_radius / 2)
-            .faces("XZ")
-            .workplane()
+            .faces("XZ").workplane()
             .circle(2 * axis_radius).cutThruAll()
             )
     return body
