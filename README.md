@@ -24,7 +24,7 @@ Si quieren leer una explicación *muy extensa* de cómo logré mi propia versió
 
 ## Instalación (entorno para *editar* el modelo)
 
-Los archivos STL ya están listos para imprimir. Si no tenés intención de editar el modelo, no es necesaria ésta instalación.
+Los archivos STL  (carpeta **output**) ya están listos para imprimir. Si no tenés intención de editar el modelo, no es necesaria ésta instalación.
 
 ### Entorno Python
 
@@ -54,12 +54,6 @@ python main.py
 
 ### Editar con CQ-Editor
 
-1. Abrir  CQ-Editor
-2. En la ventana  `Editor` tipear:
-```python
-import sys
-install_path = "." #carpeta donde descargaste/clonaste 
-sys.path.append(f"{install_path}/reloj-de-sol-digital-cadquery")
-from digital_sundial import sundial_discrete
-result = sundial_discrete()
-```
+1. Abrir CQ-Editor
+2. Menú **File** > **Open** y elegir `main.py`
+3. Menú **Run** > **Render** 
