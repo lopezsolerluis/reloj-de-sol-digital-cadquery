@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "reloj-de-sol-digital-cadquery"
 version = "0.1.0"
 authors = [
-  { name="Leandro Batlle", email="" }
-  { name="Luis López Soler", email="" },
+  { name="Leandro Batlle", email="" },
+  { name="Luis López Soler", email="" }
 ]
 description = "A digital sundial in CadQuery"
 readme = "README.md"
