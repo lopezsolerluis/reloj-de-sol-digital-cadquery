@@ -25,6 +25,8 @@ sys.path.append("../reloj-de-sol-digital-cadquery")
 d_out_base = pathlib.Path.home()
 d_out = "digital sundial"
 
+# Parts to be created. Each item is: a) Part name, b) color index, and c) parameters to give to the corresponding part.
+parts = [["base",1], ["coupling",4],["discrete_sundial",1,[(12,0)]]]
 
 def under_cq_editor() -> bool:
     """
@@ -35,13 +37,16 @@ def under_cq_editor() -> bool:
     return "show_object" in globals()
 
 
-def exportRotoTranslate(part, name):
+def exportRotoTranslate(name, params=None):
     """
     posponing rototranslation in cq.Assembly after STL exports
 
     :param part:
     :return:
     """
+    
+    part_func_name = getattr(dsd, name)
+    part = part_func_name(params) if params else part_func_name()
 
     def export_part():
         #
@@ -82,8 +87,6 @@ def exportRotoTranslate(part, name):
     return result
 
 
-import logging
-
 if under_cq_editor():
     #
     # Running CQ-Editor , please check "LOG VIEWER" window
@@ -122,23 +125,12 @@ asm = dsd.cq.Assembly()
 base_color = ["darkslategray", "deepskyblue", "coral", "lightblue"] # "grey6"  # has to have 4 or more variants
 base_color = random.choice(base_color)
 
-#
-# base
-#
-name = "base"
-# wish I understood cq.Assembly.constrain() documentation, but I don't. So...
-# ... exportRotoTranslate() exports THEN rototranslates
-asm.add(exportRotoTranslate(dsd.base(), name), name=name, color=dsd.cq.Color(base_color + "1"))
-#
-# coupling
-#
-name = "coupling"
-asm.add(exportRotoTranslate(dsd.coupling(), name), name=name, color=dsd.cq.Color(base_color + "4"))
-#
-#  discrete_sundial
-#
-name="discrete_sundial"
-asm.add(exportRotoTranslate(dsd.discrete_sundial([(12, 0)]), name), name=name, color=dsd.cq.Color(base_color + "1"))
+for part in parts:
+    name = part[0]
+    color_index = str(part[1])
+    params = part[2] if len(part)==3 else None
+    asm.add(exportRotoTranslate(name, params), name=name, color=dsd.cq.Color(base_color + color_index))
+
 
 if under_cq_editor():
     show_object(asm)
