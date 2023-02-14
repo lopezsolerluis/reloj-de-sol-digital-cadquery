@@ -45,7 +45,8 @@ pillar_separation = .2
 H = semicylinder_radius + 10
 sundial_length = 21 * pixel_width + 20 * delta_width + 2 * border
 delta_x = pixel_width + delta_width
-
+rotation_axis_origin = (0, 0, semicylinder_radius / 2)
+rotation_axis_end = (0, 1, semicylinder_radius / 2)
 
 digits = [[[0, 1, 1, 0],  # zero
            [1, 0, 0, 1],
@@ -273,7 +274,7 @@ def coupling():
     body = (cq.Workplane("YZ")
             .cylinder(height=length_coupling,
                       radius=semicylinder_radius, angle=180)
-            .translate((-length_coupling / 2 - 1, 0, 0))  # Why can't I put this _on_ YZ' plane?
+            .translate((-length_coupling / 2 - 1, 0, 0))  # Why can't I put this _on_ 'YZ' plane?
             .faces("<X").edges("<Z")
             .workplane(centerOption="CenterOfMass")
             .center(0, pins_height / 2)
@@ -297,9 +298,9 @@ if __name__ == '__main__':
     print("WARN: module not intended to be run directly")
     #
     b = base()
-    c = coupling().rotate((0, 0, semicylinder_radius / 2), (0, 1, semicylinder_radius / 2), 30).translate((0, 0, 2))
-    sundial_discrete_rotated = discrete_sundial([(12, 0)]).translate((-sundial_length / 2 - 40, 0, 2)).rotate(
-        (0, 0, semicylinder_radius / 2), (0, 1, semicylinder_radius / 2), 30)
+    c = coupling().rotate(rotation_axis_origin, rotation_axis_end, 30).translate((0, 0, 2))
+    sundial_discrete_rotated = discrete_sundial([(12, 0)]).translate((-sundial_length / 2 - 40, 0, 2))
+                                                          .rotate(rotation_axis_origin, rotation_axis_end, 30)
     # sundial_rotated = continuous_sundial().translate((-sundial_length/2-40,0,2)).rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30)
     # sundial_1 = continuous_sundial()
     # sundial_2 = discrete_sundial([(12,0),(15,23),(8,10)])

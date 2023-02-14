@@ -71,14 +71,12 @@ def exportRotoTranslate(part, name):
     result = None
     export_part()
     if name == "coupling":
-        result=part.rotate((0, 0, dsd.semicylinder_radius / 2),
-                        (0, 1, dsd.semicylinder_radius / 2),
-                        30).translate((0, 0, 2))
+        result=part.rotate(dsd.rotation_axis_origin, dsd.rotation_axis_end, 30).translate((0, 0, 2))
     elif name == "base":
         result = part
     elif name == "discrete_sundial":
         result=(part.translate((-dsd.sundial_length / 2 - 40, 0, 2)).
-         rotate((0, 0, dsd.semicylinder_radius / 2), (0, 1, dsd.semicylinder_radius / 2), 30))
+         rotate(dsd.rotation_axis_origin, dsd.rotation_axis_end, 30))
     else:
         logger.info(f"WARN: can't rototranslate '{name}': unknown name")
     return result
