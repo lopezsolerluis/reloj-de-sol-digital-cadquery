@@ -57,3 +57,5 @@ python main.py
 1. Abrir CQ-Editor
 2. Menú **File** > **Open** y elegir `main.py`
 3. Menú **Run** > **Render** 
+
+![cq-edit](https://github.com/lopezsolerluis/reloj-de-sol-digital-cadquery/blob/main/cq-edit-screenshot.png)
