@@ -27,6 +27,8 @@ d_out = "digital sundial"
 
 # Parts to be created. Each item is: a) Part name, b) color index, and c) parameters to give to the corresponding part.
 parts = [["base",1], ["coupling",4],["discrete_sundial",1,[(12,0)]]]
+# Extensions to export
+exts = ["svg", "stl"]
 
 def under_cq_editor() -> bool:
     """
@@ -41,19 +43,19 @@ def exportRotoTranslate(name, params=None):
     """
     posponing rototranslation in cq.Assembly after STL exports
 
-    :param part:
+    :param name, params:
     :return:
     """
     
     part_func_name = getattr(dsd, name)
     part = part_func_name(params) if params else part_func_name()
 
-    def export_part():
+    def export_part(ext):
         #
         # parts export
         #
         global d_out
-        nonlocal name, part
+        nonlocal name
 
         try:
             os.mkdir(d_out_base / d_out)
@@ -64,13 +66,9 @@ def exportRotoTranslate(name, params=None):
             logger.info(f"ERR: creating directory {e}")
             d_out = d_out_base
 
-        ext = ".svg"
-        f_out = d_out / (name + ext)
-        logger.info(f"- exporting {ext.upper()} picture to {f_out}")
-        part.exportSvg(str(f_out))
-        ext = ".stl"
-        f_out = d_out / (name + ext)
-        logger.info(f"- exporting {ext.upper()} model to {f_out}")
+        f_out = d_out / (name + "." + ext)
+        ext_type = "picture" if ext=="svg" else "model"
+        logger.info(f"- exporting {ext.upper()} {ext_type} to {f_out}")
         dsd.cq.exporters.export(part, fname=str(f_out))
 
     result = None
