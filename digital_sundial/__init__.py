@@ -1,6 +1,7 @@
 """ Digital Sundial - Continuous and Digital
 
-Derivative from the wonderful [digital sundial](https://www.thingiverse.com/thing:1068443) created by **Mojoptix**.
+Inspired in the wonderful [digital sundial](https://www.thingiverse.com/thing:1068443) created by **Mojoptix**.
+Adapted from [one of the authors' version in OpenSCAD](https://github.com/lopezsolerluis/reloj-de-sol-digital).
 
 """
 
@@ -181,7 +182,7 @@ def sun_hour(hours, minutes):
     return result
 
 
-def text_to_cut(text, x):    
+def text_to_cut(text, x):
     delta_a = 160 / (len(text) - 1)
     result = cq.Workplane("XY")
     for i in range(len(text)):
