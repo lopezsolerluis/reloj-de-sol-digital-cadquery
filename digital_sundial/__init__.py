@@ -31,6 +31,7 @@ pins_width = 5
 pins_angle = 60
 pins_length = 8
 pin_distance = semicylinder_radius * .6
+pins_clearence = .2
 axis_radius = 2.5
 base_radius = semicylinder_radius + 15
 base_height = 2
@@ -206,7 +207,7 @@ def sundial_body():
             .sketch()
             .trapezoid(pins_width, pins_height, -pins_angle)
             .finalize()
-            .cutBlind(-pins_length)
+            .extrude(pins_length)
             )
     body = (body.cut(text_to_cut(text_1, -sundial_length / 2 + 5))
             .cut(text_to_cut(text_2, sundial_length / 2 - 5)))
@@ -278,9 +279,10 @@ def coupling():
             .center(0, pins_height / 2)
             .pushPoints([(-pin_distance, 0), (pin_distance, 0)])
             .sketch()
-            .trapezoid(pins_width, pins_height, -pins_angle)
+            .trapezoid(pins_width+2*pins_clearence,
+                       pins_height+pins_clearence, -pins_angle)
             .finalize()
-            .extrude(pins_length)
+            .cutBlind(-pins_length)
             .copyWorkplane(cq.Workplane("XZ"))
             .center(0, semicylinder_radius / 2)
             .cylinder(height=2 * semicylinder_radius,
