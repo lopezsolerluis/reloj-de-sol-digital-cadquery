@@ -291,7 +291,7 @@ def coupling():
 
 
 if __name__ == '__main__':
-    print("WARN: module not intended to be run direcly")
+    print("WARN: module not intended to be run directly")
     #
     b = base()
     c = coupling().rotate((0, 0, semicylinder_radius / 2), (0, 1, semicylinder_radius / 2), 30).translate((0, 0, 2))

@@ -21,3 +21,39 @@ Gracias a **Leandro Batlle** me enteré de la existencia de [un nuevo lenguaje](
 Así que aquí estamos... 😊
 
 Si quieren leer una explicación *muy extensa* de cómo logré mi propia versión en OpenSCAD, pueden encontrarla [aquí](https://github.com/lopezsolerluis/reloj-de-sol-libro).
+
+## Instalación (entorno para *editar* el modelo)
+
+Los archivos STL  (carpeta **output**) ya están listos para imprimir. Si no tenés intención de editar el modelo, no es necesaria ésta instalación.
+
+### Entorno Python
+
+Si ya tenés instalado un entorno con la biblioteca [CadQuery](https://cadquery.readthedocs.io/en/latest/)  podés saltear ésta sección, directo a `Entorno de Edición`
+
+```bash
+conda env create -f environment.yml
+```
+
+Si algo falla, instalá un entorno de CadQuery según [éstas instrucciones](https://cadquery.readthedocs.io/en/latest/installation.html#installing-cadquery)
+
+
+
+### Entorno de Edición
+
+1. Activar un Entorno Python adecuado según la sección anterior
+
+```bash
+conda activate cadquery
+```
+
+1. probar el entorno ejecutando `main.py`
+
+```bash
+python main.py
+```
+
+### Editar con CQ-Editor
+
+1. Abrir CQ-Editor
+2. Menú **File** > **Open** y elegir `main.py`
+3. Menú **Run** > **Render** 
