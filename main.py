@@ -111,7 +111,8 @@ else:
     logger.info(
         f"""- to manipulate the sundial under QC-Editor: 
         - open `main.py` (menu **file**)
-        - might need to correct the line that starts with "sys.path.append" (line ~18)
+        - might need to correct the line that starts with "sys.path.append" (line ~38)
+        -.change (if you will) the parts to create in line ~30
         - push **render** button (play) 
 """)
 

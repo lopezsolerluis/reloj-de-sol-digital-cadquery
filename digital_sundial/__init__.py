@@ -196,6 +196,11 @@ def text_to_cut(text, x):
                        rotate((0, 0, 0), (1, 0, 0), -i * delta_a + 90 - 10))
     return result
 
+def pins(clearence=0):
+    return (cq.Sketch()
+              .push([(-pin_distance, 0), (pin_distance, 0)])
+              .trapezoid(pins_width+2*clearence, pins_height+clearence, -pins_angle)
+              )
 
 def sundial_body():
     body = (cq.Workplane("YZ").cylinder(height=sundial_length,
@@ -204,10 +209,7 @@ def sundial_body():
             .faces(">X").edges("<Z")
             .workplane(centerOption="CenterOfMass")
             .center(0, pins_height / 2)
-            .pushPoints([(-pin_distance, 0), (pin_distance, 0)])
-            .sketch()
-            .trapezoid(pins_width, pins_height, -pins_angle)
-            .finalize()
+            .placeSketch(pins())
             .extrude(pins_length)
             )
     body = (body.cut(text_to_cut(text_1, -sundial_length / 2 + 5))
@@ -285,11 +287,7 @@ def coupling():
             .faces("<X").edges("<Z")
             .workplane(centerOption="CenterOfMass")
             .center(0, pins_height / 2)
-            .pushPoints([(-pin_distance, 0), (pin_distance, 0)])
-            .sketch()
-            .trapezoid(pins_width+2*pins_clearence,
-                       pins_height+pins_clearence, -pins_angle)
-            .finalize()
+            .placeSketch(pins(pins_clearence))
             .cutBlind(-pins_length)
             .copyWorkplane(cq.Workplane("XZ"))
             .center(0, semicylinder_radius / 2)
