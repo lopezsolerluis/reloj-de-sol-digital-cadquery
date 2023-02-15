@@ -17,20 +17,18 @@ This demo at main.py will:
 import os, pathlib, sys, random, logging
 import digital_sundial as dsd
 
-# Parts available for creation. Each item is: key: Part name, value: a) color index, 
-# b) parameters to give to the corresponding part, and 
-# c) parameters for the corresponding rotations or translations
+# Parts available for creation. Each item is: key: Part name, value: a) color index,
+# b) parameters for the corresponding rotations or translations
 parts_available = {
-    "base": [1,None,[]],
-    "coupling": [4,None,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
+    "base": [1,[]],
+    "coupling": [4,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
                              [[0, 0, 2]]]],
-    "sundial": [1,[(12,0)],[[[-dsd.sundial_length / 2 - 40, 0, 2]], # For discrete sundial
-                                [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]] 
-#         ["sundial",1,None,[[[-dsd.sundial_length / 2 - 40, 0, 2]],  # For continuous sundial
-#                            [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]
+    "sundial": [1,[[[-dsd.sundial_length / 2 - 40, 0, 2]],
+                   [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]] 
 }
-# Parts to create.
-parts = ["base", "coupling", "sundial"]
+# Parts to create. If part has parameters (as a discrete sundial) it must be a vector with them.
+parts = ["base", "coupling", ["sundial",[(12,0)]]] # Discrete sundial
+#parts = ["base", "coupling", "sundial"] # Continuos sundial
 # Extensions to export
 file_types = ["svg", "stl"]
 
@@ -130,9 +128,12 @@ asm = dsd.cq.Assembly()
 base_color = ["darkslategray", "deepskyblue", "coral", "lightblue"] # "grey6"  # has to have 4 or more variants
 base_color = random.choice(base_color)
 
-for name in parts:
+for part in parts:
+    has_params = type(part)==list
+    name = part[0] if has_params else part
     if part_props := parts_available.get(name):
-        color_index_int, params, transforms = part_props
+        color_index_int, transforms = part_props
+        params=part[1] if has_params else None
         color_index = str(color_index_int)
         asm.add(exportRotoTranslate(name, params, transforms), name=name, color=dsd.cq.Color(base_color + color_index))
 
