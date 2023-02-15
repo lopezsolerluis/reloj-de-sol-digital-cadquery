@@ -17,6 +17,11 @@ This demo at main.py will:
 import os, pathlib, sys, random, logging
 import digital_sundial as dsd
 
+# Parts to be created. Each item is: a) Part name, b) color index, and c) parameters to give to the corresponding part.
+parts = [["base",1], ["coupling",4],["discrete_sundial",1,[(12,0)]]]
+# Extensions to export
+file_types = ["svg", "stl"]
+
 # README:
 #           You might need to replace next path with the actual location where you cloned/downloaded the project
 #
@@ -25,11 +30,15 @@ sys.path.append("../reloj-de-sol-digital-cadquery")
 d_out_base = pathlib.Path.home()
 d_out = "digital sundial"
 
-# Parts to be created. Each item is: a) Part name, b) color index, and c) parameters to give to the corresponding part.
-parts = [["base",1], ["coupling",4],["discrete_sundial",1,[(12,0)]]]
-# Extensions to export
-exts = ["svg", "stl"]
-
+try:
+    os.mkdir(d_out_base / d_out)
+    raise FileExistsError
+except FileExistsError as e:
+    d_out = d_out_base / d_out
+except Exception as e:
+    logger.info(f"ERR: creating directory {e}")
+    d_out = d_out_base
+    
 def under_cq_editor() -> bool:
     """
     test whether run in QC-editor > Editor window
@@ -57,22 +66,14 @@ def exportRotoTranslate(name, params=None):
         global d_out
         nonlocal name
 
-        try:
-            os.mkdir(d_out_base / d_out)
-            raise FileExistsError
-        except FileExistsError as e:
-            d_out = d_out_base / d_out
-        except Exception as e:
-            logger.info(f"ERR: creating directory {e}")
-            d_out = d_out_base
-
         f_out = d_out / (name + "." + ext)
         ext_type = "picture" if ext=="svg" else "model"
         logger.info(f"- exporting {ext.upper()} {ext_type} to {f_out}")
         dsd.cq.exporters.export(part, fname=str(f_out))
 
     result = None
-    export_part()
+    for ext in file_types:
+        export_part(ext)
     if name == "coupling":
         result=part.rotate(dsd.rotation_axis_origin, dsd.rotation_axis_end, 30).translate((0, 0, 2))
     elif name == "base":
