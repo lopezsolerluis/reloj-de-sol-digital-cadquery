@@ -18,7 +18,7 @@ import os, pathlib, sys, random, logging
 import digital_sundial as dsd
 
 # Parts available for creation. Each item is: key: Part name, value: a) color index,
-# b) parameters for the corresponding rotations or translations
+# b) parameters for the corresponding rotations or translations (possibly empty)
 parts_available = {
     "base": [1,[]],
     "coupling": [4,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
@@ -27,8 +27,8 @@ parts_available = {
                    [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]] 
 }
 # Parts to create. If part has parameters (as a discrete sundial) it must be a vector with them.
-parts = ["base", "coupling", ["sundial",[(12,0)]]] # Discrete sundial
-#parts = ["base", "coupling", "sundial"] # Continuos sundial
+parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial
+#parts = ["base", "coupling", "sundial"] # Continuous sundial
 # Extensions to export
 file_types = ["svg", "stl"]
 
