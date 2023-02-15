@@ -23,11 +23,17 @@ parts_available = {
     "base": [1,[]],
     "coupling": [4,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
                              [[0, 0, 2]]]],
-    "sundial": [1,[[[-dsd.sundial_length / 2 - 40, 0, 2]],
-                   [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]] 
+    "sundial": [1,[[[-dsd.sundial_length / 2 - 40, dsd.semicylinder_radius*1.2, 2]],
+                   [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]],
+    "sundial_top": [1,[[[-dsd.sundial_length / 2 - 55, -dsd.semicylinder_radius*1.2, 2]],
+                       [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]],
+    "sundial_bottom": [1,[[[-dsd.sundial_length / 2 - 40, -dsd.semicylinder_radius*1.2, 2]],
+                          [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]
 }
 # Parts to create. If part has parameters (as a discrete sundial) it must be a vector with them.
-parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial
+#parts = ["base", "coupling", "sundial", "sundial_top", "sundial_bottom"]
+parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], ["sundial_bottom", [(12,0)]]]
+#parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial
 #parts = ["base", "coupling", "sundial"] # Continuous sundial
 # Extensions to export
 file_types = ["svg", "stl"]

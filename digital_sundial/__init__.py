@@ -30,7 +30,7 @@ pins_height = 7
 pins_width = 5
 pins_angle = 60
 pins_length = 8
-pin_distance = semicylinder_radius * .6
+pin_distance = semicylinder_radius * .65
 pins_clearence = .2
 axis_radius = 2.5
 base_radius = semicylinder_radius + 15
@@ -202,6 +202,7 @@ def pins(clearence=0):
               .trapezoid(pins_width+2*clearence, pins_height+clearence, -pins_angle)
               )
 
+
 def sundial_body():
     body = (cq.Workplane("YZ").cylinder(height=sundial_length,
                                         radius=semicylinder_radius,
@@ -213,7 +214,7 @@ def sundial_body():
             .extrude(pins_length)
             )
     body = (body.cut(text_to_cut(text_1, -sundial_length / 2 + 5))
-            .cut(text_to_cut(text_2, sundial_length / 2 - 5)))
+                .cut(text_to_cut(text_2, sundial_length / 2 - 5)))
     return body
 
 
@@ -245,20 +246,51 @@ def continuous_sundial():
         units_of_hour = digit_of_number(hour, 0)
         c = c.cut(digit(units_of_hour,
                         hour_to_alpha(hour),
-                        hour_to_alpha(hour + 50 / 60 if hour < 15 else hour + 10 / 60)).translate(
-            [3.5 * delta_x, 0, 0]))
+                        hour_to_alpha(hour + 50 / 60 if hour < 15 else hour + 10 / 60)).translate([3.5 * delta_x, 0, 0]))
     # tens of hours
     c = c.cut(digit(1, hour_to_alpha(10), hour_to_alpha(15 + 10 / 60)).translate([8.5 * delta_x, 0, 0]))
     return c
 
+# For memoizing
+sundial_cache = {}
 
+# Creating a sundial is expensive. In case the user needs both the upper and bottom halves separated, it's much better to calculate the full sundial only once.
 def sundial(vector_hours=None):
-    if vector_hours:
-        return discrete_sundial(vector_hours)
+    key = str(vector_hours)
+    if sundial := sundial_cache.get(key):
+        return sundial
+    elif vector_hours:
+        result = discrete_sundial(vector_hours)
     else:
-        return continuous_sundial()
-    
-    
+        result = continuous_sundial()
+    sundial_cache[key] = result
+    return result
+
+
+def sundial_half(vector_hours, top=False, bottom=False): # TODO: What should be done in case *both* top and bottom are False?
+    sundial_full = sundial(vector_hours)
+    return sundial_full.faces('<X').workplane(-(border+9*pixel_width+11*delta_width)).split(keepTop=top, keepBottom=bottom)
+
+
+def sundial_top(vector_hours=None):
+    result = sundial_half(vector_hours, top=True)
+    return (result.faces(">X").edges("<Z")
+                  .workplane(centerOption="CenterOfMass")
+                  .center(0, pins_height / 2)
+                  .placeSketch(pins())
+                  .extrude(pins_length)
+                  )
+
+
+def sundial_bottom(vector_hours=None):
+    result = sundial_half(vector_hours, bottom=True)
+    return (result.faces("<X").edges("<Z")
+                  .workplane(centerOption="CenterOfMass")
+                  .center(0, pins_height / 2)
+                  .placeSketch(pins(pins_clearence))
+                  .cutBlind(-pins_length-pins_clearence)
+                  )
+
 def base():
     base = (cq.Workplane("XY")
             .cylinder(height=base_height, radius=base_radius)
@@ -288,7 +320,7 @@ def coupling():
             .workplane(centerOption="CenterOfMass")
             .center(0, pins_height / 2)
             .placeSketch(pins(pins_clearence))
-            .cutBlind(-pins_length)
+            .cutBlind(-pins_length-pins_clearence)
             .copyWorkplane(cq.Workplane("XZ"))
             .center(0, semicylinder_radius / 2)
             .cylinder(height=2 * semicylinder_radius,
