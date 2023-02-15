@@ -3,11 +3,11 @@
 Inspired in the wonderful [digital sundial](https://www.thingiverse.com/thing:1068443) created by **Mojoptix**.
 Adapted from [one of the authors' version in OpenSCAD](https://github.com/lopezsolerluis/reloj-de-sol-digital).
 
-This demo at main.py will:
+With this demo at main.py you can:
 
-1. create a discrete sundial
-2. export the sundial to STL and SVG
-3. same with the base (loop previous steps)
+1. create a discrete or continuous sundial, both in one part or two halves
+2. create a base and a copupling
+3. export everything to STL and SVG
 4. if run in QC-editor, will show the rendered model. Instructions:
     1. menu **file** > **open**
     2. menu **run** > **render** or hit `Run` button
@@ -17,12 +17,12 @@ This demo at main.py will:
 import os, pathlib, sys, random, logging
 import digital_sundial as dsd
 
-# Parts available for creation. Each item is: key: Part name, value: a) color index,
+# Parts available for creation. Each item is: I) key: part name; II) value: a) color index,
 # b) parameters for the corresponding rotations or translations (possibly empty)
 parts_available = {
     "base": [1,[]],
     "coupling": [4,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
-                             [[0, 0, 2]]]],
+                    [[0, 0, 2]]]],
     "sundial": [1,[[[-dsd.sundial_length / 2 - 40, dsd.semicylinder_radius*1.2, 2]],
                    [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]],
     "sundial_top": [1,[[[-dsd.sundial_length / 2 - 55, -dsd.semicylinder_radius*1.2, 2]],
@@ -30,7 +30,7 @@ parts_available = {
     "sundial_bottom": [1,[[[-dsd.sundial_length / 2 - 40, -dsd.semicylinder_radius*1.2, 2]],
                           [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]
 }
-# Parts to create. If part has parameters (as a discrete sundial) it must be a vector with them.
+# Parts to create. If any part has parameters (as a discrete sundial), they must be declared in a vector.
 #parts = ["base", "coupling", "sundial", "sundial_top", "sundial_bottom"]
 parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], ["sundial_bottom", [(12,0)]]]
 #parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial
@@ -38,9 +38,7 @@ parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], [
 # Extensions to export
 file_types = ["svg", "stl"]
 
-# README:
-#           You might need to replace next path with the actual location where you cloned/downloaded the project
-#
+# You might need to replace next path with the actual location where you cloned/downloaded the project
 sys.path.append("../reloj-de-sol-digital-cadquery")
 # files will be created at the directory: d_out_base/d_out
 d_out_base = pathlib.Path.home()
@@ -54,7 +52,8 @@ except FileExistsError as e:
 except Exception as e:
     logger.info(f"ERR: creating directory {e}")
     d_out = d_out_base
-    
+
+
 def under_cq_editor() -> bool:
     """
     test whether run in QC-editor > Editor window
@@ -71,7 +70,7 @@ def exportRotoTranslate(name, params, transforms):
     :param: name, params, transforms
     :return:
     """
-    
+
     part_func_name = getattr(dsd, name)
     part = part_func_name(params) if params else part_func_name()
 
@@ -89,7 +88,7 @@ def exportRotoTranslate(name, params, transforms):
 
     for ext in file_types:
         export_part(ext)
-    
+
     result = part
     for transform in transforms:
         result = result.translate(transform[0]) if len(transform)==1 else result.rotate(transform[0], transform[1], transform[2])
