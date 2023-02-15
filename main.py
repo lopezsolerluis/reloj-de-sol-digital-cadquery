@@ -17,8 +17,13 @@ This demo at main.py will:
 import os, pathlib, sys, random, logging
 import digital_sundial as dsd
 
-# Parts to be created. Each item is: a) Part name, b) color index, and c) parameters to give to the corresponding part.
-parts = [["base",1], ["coupling",4],["discrete_sundial",1,[(12,0)]]]
+# Parts to be created. Each item is: a) Part name, b) color index, 
+# c) parameters to give to the corresponding part, and d) parameters for the corresponding rotations or translations
+parts = [["base",1,None,[]],
+         ["coupling",4,None,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
+                             [[0, 0, 2]]]],
+         ["discrete_sundial",1,[(12,0)],[[[-dsd.sundial_length / 2 - 40, 0, 2]],
+                                         [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]]
 # Extensions to export
 file_types = ["svg", "stl"]
 
@@ -48,11 +53,11 @@ def under_cq_editor() -> bool:
     return "show_object" in globals()
 
 
-def exportRotoTranslate(name, params=None):
+def exportRotoTranslate(name, params, transforms):
     """
     posponing rototranslation in cq.Assembly after STL exports
 
-    :param name, params:
+    :param: name, params, transforms
     :return:
     """
     
@@ -71,18 +76,12 @@ def exportRotoTranslate(name, params=None):
         logger.info(f"- exporting {ext.upper()} {ext_type} to {f_out}")
         dsd.cq.exporters.export(part, fname=str(f_out))
 
-    result = None
     for ext in file_types:
         export_part(ext)
-    if name == "coupling":
-        result=part.rotate(dsd.rotation_axis_origin, dsd.rotation_axis_end, 30).translate((0, 0, 2))
-    elif name == "base":
-        result = part
-    elif name == "discrete_sundial":
-        result=(part.translate((-dsd.sundial_length / 2 - 40, 0, 2)).
-         rotate(dsd.rotation_axis_origin, dsd.rotation_axis_end, 30))
-    else:
-        logger.info(f"WARN: can't rototranslate '{name}': unknown name")
+    
+    result = part
+    for transform in transforms:
+        result = result.translate(transform[0]) if len(transform)==1 else result.rotate(transform[0], transform[1], transform[2])
     return result
 
 
@@ -127,13 +126,12 @@ base_color = random.choice(base_color)
 for part in parts:
     name = part[0]
     color_index = str(part[1])
-    params = part[2] if len(part)==3 else None
-    asm.add(exportRotoTranslate(name, params), name=name, color=dsd.cq.Color(base_color + color_index))
+    params = part[2]
+    transforms = part[3]
+    asm.add(exportRotoTranslate(name, params, transforms), name=name, color=dsd.cq.Color(base_color + color_index))
 
 
 if under_cq_editor():
     show_object(asm)
 else:
     pass
-
-
