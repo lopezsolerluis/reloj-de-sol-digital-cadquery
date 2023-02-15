@@ -22,8 +22,10 @@ import digital_sundial as dsd
 parts = [["base",1,None,[]],
          ["coupling",4,None,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
                              [[0, 0, 2]]]],
-         ["discrete_sundial",1,[(12,0)],[[[-dsd.sundial_length / 2 - 40, 0, 2]],
-                                         [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]]
+         ["sundial",1,[(12,0)],[[[-dsd.sundial_length / 2 - 40, 0, 2]], # For discrete sundial
+                                [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]] # For continuous sundial
+#         ["sundial",1,None,[[[-dsd.sundial_length / 2 - 40, 0, 2]],
+#                            [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]]
 # Extensions to export
 file_types = ["svg", "stl"]
 

@@ -250,6 +250,13 @@ def continuous_sundial():
     return c
 
 
+def sundial(vector_hours=None):
+    if vector_hours:
+        return discrete_sundial(vector_hours)
+    else:
+        return continuous_sundial()
+    
+    
 def base():
     base = (cq.Workplane("XY")
             .cylinder(height=base_height, radius=base_radius)
@@ -297,10 +304,10 @@ def coupling():
 if __name__ == '__main__':
     print("WARN: module not intended to be run directly")
     #
-    b = base()
-    c = coupling().rotate(rotation_axis_origin, rotation_axis_end, 30).translate((0, 0, 2))
-    sundial_discrete_rotated = (discrete_sundial([(12, 0)]).translate((-sundial_length / 2 - 40, 0, 2))
-                                                           .rotate(rotation_axis_origin, rotation_axis_end, 30))
+    #b = base()
+    #c = coupling().rotate(rotation_axis_origin, rotation_axis_end, 30).translate((0, 0, 2))
+    #sundial_discrete_rotated = (discrete_sundial([(12, 0)]).translate((-sundial_length / 2 - 40, 0, 2))
+    #                                                        .rotate(rotation_axis_origin, rotation_axis_end, 30))
     # sundial_rotated = continuous_sundial().translate((-sundial_length/2-40,0,2)).rotate((0,0,semicylinder_radius/2),(0,1,semicylinder_radius/2),30)
-    # sundial_1 = continuous_sundial()
-    # sundial_2 = discrete_sundial([(12,0),(15,23),(8,10)])
+    # sundial_1 = sundial()
+    # sundial_2 = sundial([(12,0),(15,23),(8,10)])
