@@ -125,10 +125,7 @@ def alpha_north(hour):
 
 
 def hour_to_alpha(hour):
-    if hemisphere == "sur":
-        return alpha_south(hour)
-    else:
-        return alpha_north(hour)
+    return alpha_south(hour) if hemisphere == "sur" else alpha_north(hour)
 
 
 def sun_beam(alpha1, alpha2):
@@ -149,7 +146,7 @@ def digit(number, alpha1, alpha2):
     for i in range(6):
         for j in range(4):
             if (digit[i][j] == 1):
-                x = -(j - 1.5) * (pixel_width + delta_width)
+                x = (1.5 - j) * (pixel_width + delta_width)
                 y = (i - 2.5) * (pixel_height + delta_height)
                 result.add(sun_beam(alpha1, alpha2).translate((x, y, 0)))
     return result
@@ -204,18 +201,16 @@ def pins(clearence=0):
 
 
 def sundial_body():
-    body = (cq.Workplane("YZ").cylinder(height=sundial_length,
+    return (cq.Workplane("YZ").cylinder(height=sundial_length,
                                         radius=semicylinder_radius,
                                         angle=180)
-            .faces(">X").edges("<Z")
-            .workplane(centerOption="CenterOfMass")
-            .center(0, pins_height / 2)
-            .placeSketch(pins())
-            .extrude(pins_length)
-            )
-    body = (body.cut(text_to_cut(text_1, -sundial_length / 2 + 5))
-                .cut(text_to_cut(text_2, sundial_length / 2 - 5)))
-    return body
+              .faces(">X").edges("<Z")
+              .workplane(centerOption="CenterOfMass")
+              .center(0, pins_height / 2)
+              .placeSketch(pins())
+              .extrude(pins_length)
+              .cut(text_to_cut(text_1, -sundial_length / 2 + 5))
+              .cut(text_to_cut(text_2, sundial_length / 2 - 5)))
 
 
 def discrete_sundial(vector_hours):
@@ -289,43 +284,41 @@ def sundial_bottom(vector_hours=None):
                   )
 
 def base():
-    base = (cq.Workplane("XY")
-            .cylinder(height=base_height, radius=base_radius)
-            .faces(">Z").workplane().tag("top-face")
-            .center(base_radius - 18, -5)
-            .cylinder(5, 5, centered=False)
-            .faces(">Z")
-            .cskHole(4, 8, 82, depth=None)
-            .workplaneFromTagged("top-face")
-            .pushPoints([(0, base_radius - semicylinder_radius / 2 + pillar_width / 2 + pillar_separation),
-                         (0, -(base_radius - semicylinder_radius / 2 + pillar_width / 2 + pillar_separation))])
-            .rect(semicylinder_radius, pillar_width).extrude(semicylinder_radius + base_height / 2)
-            .faces(">Z").edges("|Y").fillet(semicylinder_radius / 2.01)
-            .faces(">Y").workplane()
-            .center(0, semicylinder_radius / 2 + base_height / 2)
-            .circle(2 * axis_radius).cutThruAll()
-            )
-    return base
+    return (cq.Workplane("XY")
+              .cylinder(height=base_height, radius=base_radius)
+              .faces(">Z").workplane().tag("top-face")
+              .center(base_radius - 18, -5)
+              .cylinder(5, 5, centered=False)
+              .faces(">Z")
+              .cskHole(4, 8, 82, depth=None)
+              .workplaneFromTagged("top-face")
+              .pushPoints([(0, base_radius - semicylinder_radius / 2 + pillar_width / 2 + pillar_separation),
+                           (0, -(base_radius - semicylinder_radius / 2 + pillar_width / 2 + pillar_separation))])
+              .rect(semicylinder_radius, pillar_width).extrude(semicylinder_radius + base_height / 2)
+              .faces(">Z").edges("|Y").fillet(semicylinder_radius / 2.01)
+              .faces(">Y").workplane()
+              .center(0, semicylinder_radius / 2 + base_height / 2)
+              .circle(2 * axis_radius).cutThruAll()
+              )
 
 
 def coupling():
-    body = (cq.Workplane("YZ")
-            .cylinder(height=length_coupling,
-                      radius=semicylinder_radius, angle=180)
-            .translate((-length_coupling / 2 - 1, 0, 0))  # Why can't I put this _on_ 'YZ' plane?
-            .faces("<X").edges("<Z")
-            .workplane(centerOption="CenterOfMass")
-            .center(0, pins_height / 2)
-            .placeSketch(pins(pins_clearence))
-            .cutBlind(-pins_length-pins_clearence)
-            .copyWorkplane(cq.Workplane("XZ"))
-            .center(0, semicylinder_radius / 2)
-            .cylinder(height=2 * semicylinder_radius,
-                      radius=semicylinder_radius / 2)
-            .faces("XZ").workplane()
-            .circle(2 * axis_radius).cutThruAll()
-            )
-    return body
+    return (cq.Workplane("YZ")
+              .cylinder(height=length_coupling,
+                        radius=semicylinder_radius, angle=180)
+              .translate((-length_coupling / 2 - 1, 0, 0))  # Why can't I put this _on_ 'YZ' plane?
+              .faces("<X").edges("<Z")
+              .workplane(centerOption="CenterOfMass")
+              .center(0, pins_height / 2)
+              .placeSketch(pins(pins_clearence))
+              .cutBlind(-pins_length-pins_clearence)
+              .copyWorkplane(cq.Workplane("XZ"))
+              .center(0, semicylinder_radius / 2)
+              .cylinder(height=2 * semicylinder_radius,
+                        radius=semicylinder_radius / 2)
+              .faces("XZ").workplane()
+              .circle(2 * axis_radius).cutThruAll()
+              )
 
 
 if __name__ == '__main__':
