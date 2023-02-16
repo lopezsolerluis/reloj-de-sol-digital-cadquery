@@ -259,10 +259,7 @@ def sundial(vector_hours=None):
     key = str(vector_hours)
     if sundial := sundial_cache.get(key):
         return sundial
-    elif vector_hours:
-        result = discrete_sundial(vector_hours)
-    else:
-        result = continuous_sundial()
+    result = discrete_sundial(vector_hours) if vector_hours else continuous_sundial()
     sundial_cache[key] = result
     return result
 
