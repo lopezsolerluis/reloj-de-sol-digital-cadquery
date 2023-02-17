@@ -17,24 +17,11 @@ With this demo at main.py you can:
 import os, pathlib, sys, random, logging
 import digital_sundial as dsd
 
-# Parts available for creation. Each item is: I) key: part name; II) value: a) color index,
-# b) parameters for the corresponding rotations or translations (possibly empty)
-parts_available = {
-    "base": [1,[]],
-    "coupling": [4,[[dsd.rotation_axis_origin, dsd.rotation_axis_end, 30],
-                    [[0, 0, 2]]]],
-    "sundial": [1,[[[-dsd.sundial_length / 2 - 40, dsd.semicylinder_radius*1.2, 2]],
-                   [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]],
-    "sundial_top": [1,[[[-dsd.sundial_length / 2 - 55, -dsd.semicylinder_radius*1.2, 2]],
-                       [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]],
-    "sundial_bottom": [1,[[[-dsd.sundial_length / 2 - 40, -dsd.semicylinder_radius*1.2, 2]],
-                          [dsd.rotation_axis_origin, dsd.rotation_axis_end, 30]]]
-}
 # Parts to create. If any part has parameters (as a discrete sundial), they must be declared in a vector.
-#parts = ["base", "coupling", "sundial", "sundial_top", "sundial_bottom"]
-parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], ["sundial_bottom", [(12,0)]]]
-#parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial
-#parts = ["base", "coupling", "sundial"] # Continuous sundial
+#parts = ["base", "coupling", "sundial", "sundial_top", "sundial_bottom"] # Continuous sundial in one part _and_ in two halves.
+parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], ["sundial_bottom", [(12,0)]]] # Discrete sundial in one part _and_ in two halves.
+#parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial in one part
+#parts = ["base", "coupling", "sundial"] # Continuous sundial in one part
 # Extensions to export
 file_types = ["svg", "stl"]
 
@@ -137,7 +124,7 @@ base_color = random.choice(base_color)
 for part in parts:
     has_params = type(part)==list
     name = part[0] if has_params else part
-    if part_props := parts_available.get(name):
+    if part_props := dsd.parts_available.get(name):
         color_index_int, transforms = part_props
         params=part[1] if has_params else None
         color_index = str(color_index_int)

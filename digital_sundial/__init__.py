@@ -48,6 +48,21 @@ delta_x = pixel_width + delta_width
 rotation_axis_origin = (0, 0, semicylinder_radius / 2)
 rotation_axis_end = (0, 1, semicylinder_radius / 2)
 
+# Parts available for creation. Each item is: I) key: part name; II) value: a) color index,
+# b) parameters for the corresponding rotations or translations (possibly empty)
+parts_available = {
+    "base": [1,[]],
+    "coupling": [4,[[rotation_axis_origin, rotation_axis_end, 30],
+                    [[0, 0, 2]]]],
+    "sundial": [1,[[[-sundial_length / 2 - 40, semicylinder_radius*1.2, 2]],
+                   [rotation_axis_origin, rotation_axis_end, 30]]],
+    "sundial_top": [1,[[[-sundial_length / 2 - 55, -semicylinder_radius*1.2, 2]],
+                       [rotation_axis_origin, rotation_axis_end, 30]]],
+    "sundial_bottom": [1,[[[-sundial_length / 2 - 40, -semicylinder_radius*1.2, 2]],
+                          [rotation_axis_origin, rotation_axis_end, 30]]]
+}
+
+
 digits = [[[0, 1, 1, 0],  # zero
            [1, 0, 0, 1],
            [1, 0, 1, 1],
