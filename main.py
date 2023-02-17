@@ -18,10 +18,10 @@ import os, pathlib, sys, random, logging
 import digital_sundial as dsd
 
 # Parts to create. If any part has parameters (as a discrete sundial), they must be declared in a vector.
-#parts = ["base", "coupling", "sundial", "sundial_top", "sundial_bottom"] # Continuous sundial in one part _and_ in two halves.
-parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], ["sundial_bottom", [(12,0)]]] # Discrete sundial in one part _and_ in two halves.
-#parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial in one part
-#parts = ["base", "coupling", "sundial"] # Continuous sundial in one part
+#parts = ["base", "coupling", "sundial", "sundial_top", "sundial_bottom"]
+parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], ["sundial_bottom", [(12,0)]]]
+#parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial
+#parts = ["base", "coupling", "sundial"] # Continuous sundial
 # Extensions to export
 file_types = ["svg", "stl"]
 
@@ -122,7 +122,7 @@ base_color = ["darkslategray", "deepskyblue", "coral", "lightblue"] # "grey6"  #
 base_color = random.choice(base_color)
 
 for part in parts:
-    has_params = type(part)==list
+    has_params = type(part) is list
     name = part[0] if has_params else part
     if part_props := dsd.parts_available.get(name):
         color_index_int, transforms = part_props
