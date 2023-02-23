@@ -6,7 +6,7 @@ Adapted from [one of the authors' version in OpenSCAD](https://github.com/lopezs
 """
 
 import cadquery as cq
-from math import trunc, radians, tan
+from math import trunc
 from collections import defaultdict
 
 __all__ = list()
@@ -146,13 +146,13 @@ def hour_to_alpha(hour):
 def sun_beam(alpha1, alpha2):
     alpha_min = min(alpha1, alpha2)
     alpha_max = max(alpha1, alpha2)
-    D1 = H / tan(radians(alpha_min))
-    D2 = H / tan(radians(alpha_max))
-    vertices = [(-pixel_height / 2, 0, 0),
-                (D2 - pixel_height / 2, H, 0),
-                (D1 + pixel_height / 2, H, 0),
-                (pixel_height / 2, 0, 0)]
-    return cq.Workplane("YZ").polyline(vertices).close().extrude(pixel_width / 2, both=True)
+    return (cq.Workplane("YZ")
+              .center(0,H/2)
+              .sketch()
+              .trapezoid(pixel_height,H,alpha_max,-alpha_min)
+              .finalize()
+              .extrude(pixel_width/2, both=True)
+              )
 
 
 def digit(number, alpha1, alpha2):
