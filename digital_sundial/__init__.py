@@ -7,7 +7,7 @@ Adapted from [one of the authors' version in OpenSCAD](https://github.com/lopezs
 
 import cadquery as cq
 from math import trunc
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 __all__ = list()
 
@@ -48,18 +48,23 @@ delta_x = pixel_width + delta_width
 rotation_axis_origin = (0, 0, semicylinder_radius / 2)
 rotation_axis_end = (0, 1, semicylinder_radius / 2)
 
-# Parts available for creation. Each item is: I) key: part name; II) value: a) color index,
-# b) parameters for the corresponding rotations or translations (possibly empty)
+Part = namedtuple("Part", "color_index transformations", defaults=[[]])
+
+# Parts available for creation. 'transformations' are the corresponding rotations or translations (possibly empty)
 parts_available = {
-    "base": (1,[]),
-    "coupling": (4,[[rotation_axis_origin, rotation_axis_end, 30],
-                    [[0, 0, 2]]]),
-    "sundial": (1,[[[-sundial_length / 2 - 40, semicylinder_radius*1.2, 2]],
-                   [rotation_axis_origin, rotation_axis_end, 30]]),
-    "sundial_top": (1,[[[-sundial_length / 2 - 55, -semicylinder_radius*1.2, 2]],
-                       [rotation_axis_origin, rotation_axis_end, 30]]),
-    "sundial_bottom": (1,[[[-sundial_length / 2 - 40, -semicylinder_radius*1.2, 2]],
-                          [rotation_axis_origin, rotation_axis_end, 30]])
+    "base": Part(color_index=1),
+    "coupling": Part(color_index=4,
+                     transformations=[[rotation_axis_origin, rotation_axis_end, 30],
+                                      [[0, 0, 2]]]),
+    "sundial": Part(color_index=1,
+                    transformations=[[[-sundial_length / 2 - 40, semicylinder_radius*1.2, 2]],
+                                     [rotation_axis_origin, rotation_axis_end, 30]]),
+    "sundial_top": Part(color_index=1,
+                        transformations=[[[-sundial_length / 2 - 55, -semicylinder_radius*1.2, 2]],
+                                         [rotation_axis_origin, rotation_axis_end, 30]]),
+    "sundial_bottom": Part(color_index=1,
+                           transformations=[[[-sundial_length / 2 - 40, -semicylinder_radius*1.2, 2]],
+                                            [rotation_axis_origin, rotation_axis_end, 30]])
 }
 
 

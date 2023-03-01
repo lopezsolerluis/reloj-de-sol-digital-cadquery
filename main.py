@@ -16,12 +16,15 @@ With this demo at main.py you can:
 """
 import os, pathlib, sys, random, logging
 import digital_sundial as dsd
+from collections import namedtuple
 
-# Parts to create. If any part has parameters (as a discrete sundial), they must be declared in a vector.
-#parts = ["base", "coupling", "sundial", "sundial_top", "sundial_bottom"]
-parts = ["base", "coupling", ["sundial", [(12,0)]], ["sundial_top", [(12,0)]], ["sundial_bottom", [(12,0)]]]
-#parts = ["base", "coupling", ["sundial",[(12,0),(15,40)]]] # Discrete sundial
-#parts = ["base", "coupling", "sundial"] # Continuous sundial
+Part = namedtuple("Part", "name params", defaults=[None])
+
+# Parts to create.
+#parts = [Part("base"), Part("coupling"), Part("sundial"), Part("sundial_top"), Part("sundial_bottom")]
+parts = [Part("base"), Part("coupling"), Part("sundial", [(12,0)]), Part("sundial_top", [(12,0)]), Part("sundial_bottom", [(12,0)])]
+#parts = [Part("base"), Part("coupling"), Part("sundial",[(12,0),(15,40)])] # Discrete sundial
+#parts = [Part("base"), Part("coupling"), Part("sundial")] # Continuous sundial
 # Extensions to export
 file_types = ["svg", "stl"]
 
@@ -122,13 +125,11 @@ base_color = ["darkslategray", "deepskyblue", "coral", "lightblue"] # "grey6"  #
 base_color = random.choice(base_color)
 
 for part in parts:
-    has_params = type(part) is list
-    name = part[0] if has_params else part
+    name = part.name
     if part_props := dsd.parts_available.get(name):
-        color_index_int, transforms = part_props
-        params=part[1] if has_params else None
-        color_index = str(color_index_int)
-        asm.add(exportRotoTranslate(name, params, transforms), name=name, color=dsd.cq.Color(base_color + color_index))
+        asm.add(exportRotoTranslate(name, part.params, part_props.transformations),
+                name=name,
+                color=dsd.cq.Color(base_color + str(part_props.color_index)))
 
 
 if under_cq_editor():
